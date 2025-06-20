@@ -26,7 +26,11 @@ const StyledScrollView = styled(ScrollView);
 
 type LoginScreenNavigationProp = StackNavigationProp<AuthStackParamList>;
 
-export const LoginScreen = memo(() => {
+interface LoginScreenProps {
+  onLogin: (userRole: UserRole) => void;
+}
+
+export const LoginScreen = memo(({ onLogin }: LoginScreenProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -57,22 +61,21 @@ export const LoginScreen = memo(() => {
     setIsLoading(true);
     try {
       const response = await authService.login({ email, password });
-      // Navigate based on user role
-      navigation.navigate('Main', { userRole: response.user.role });
+      onLogin(response.user.role);
     } catch (error) {
       Alert.alert('Error', 'Invalid email or password');
     } finally {
       setIsLoading(false);
     }
-  }, [email, password, validateForm, navigation]);
+  }, [email, password, validateForm, onLogin]);
 
   const handleQuickAccess = useCallback((role: UserRole) => {
     const credentials = TEST_CREDENTIALS[role];
     setEmail(credentials.email);
     setPassword(credentials.password);
     // Simulate login
-    navigation.navigate('Main', { userRole: role });
-  }, [navigation]);
+    onLogin(role);
+  }, [onLogin]);
 
   return (
     <KeyboardAvoidingView
@@ -97,30 +100,30 @@ export const LoginScreen = memo(() => {
 
           {/* Form */}
           <StyledView className="space-y-4">
-      <Input
-        label="Email"
+            <Input
+              label="Email"
               value={email}
               onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
+              keyboardType="email-address"
+              autoCapitalize="none"
               error={error}
               placeholder="Enter your email"
-      />
+            />
 
-      <Input
-        label="Password"
+            <Input
+              label="Password"
               value={password}
               onChangeText={setPassword}
-        secureTextEntry
+              secureTextEntry
               error={error}
               placeholder="Enter your password"
             />
 
-      <Button
+            <Button
               title={isLoading ? 'Signing in...' : 'Sign In'}
-        onPress={handleLogin}
-        disabled={isLoading}
-      />
+              onPress={handleLogin}
+              disabled={isLoading}
+            />
 
             <StyledTouchableOpacity
               onPress={() => navigation.navigate('ForgotPassword')}
@@ -168,4 +171,4 @@ export const LoginScreen = memo(() => {
       </StyledScrollView>
     </KeyboardAvoidingView>
   );
-}); 
+});

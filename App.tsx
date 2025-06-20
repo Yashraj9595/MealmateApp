@@ -15,12 +15,12 @@ export default function App() {
   const [userRole, setUserRole] = React.useState<UserRole | null>(null);
 
   return (
-      <NavigationContainer>
+    <NavigationContainer>
       {userRole ? (
         <MainNavigator userRole={userRole} />
       ) : (
-        <AuthNavigator />
+        <AuthNavigator onLogin={setUserRole} />
       )}
-      </NavigationContainer>
+    </NavigationContainer>
   );
 }

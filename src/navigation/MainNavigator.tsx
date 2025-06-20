@@ -1,5 +1,3 @@
-"use client"
-
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -19,8 +17,6 @@ import { SettingsScreen as MessOwnerSettingsScreen } from '../screens/mess-owner
 import { MessesScreen } from '../screens/admin/MessesScreen';
 import { ReportsScreen } from '../screens/admin/ReportsScreen';
 import { SettingsScreen as AdminSettingsScreen } from '../screens/admin/SettingsScreen';
-import { RouteProp } from '@react-navigation/native';
-import { AuthStackParamList } from './AuthNavigator';
 import { AdminManagementScreen } from '../screens/admin/AdminManagementScreen';
 import { CustomTabBar } from '../components/CustomTabBar';
 
@@ -54,10 +50,8 @@ export type AdminTabParamList = {
   Settings: undefined;
 };
 
-type MainScreenRouteProp = RouteProp<AuthStackParamList, 'Main'>;
-
 interface MainNavigatorProps {
-  route: MainScreenRouteProp;
+  userRole: UserRole;
 }
 
 const UserTabNavigator = () => (
@@ -127,9 +121,7 @@ const AdminTabNavigator = () => (
   </AdminTab.Navigator>
 );
 
-export const MainNavigator = ({ route }: MainNavigatorProps) => {
-  const { userRole } = route.params;
-
+export const MainNavigator = ({ userRole }: MainNavigatorProps) => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {userRole === 'user' && <Stack.Screen name="UserTabs" component={UserTabNavigator} />}
